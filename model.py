@@ -15,23 +15,38 @@ test_count = len(test) - 1;
 train_count = len(train) - 1;
 
 
-def show_box(image_name, data):
-    img = os.path.join('images/train/', image_name)
-    rows_by_img = data.loc[data['filename'] == image_name]
-    image = cv2.imread(img)
+def show_box(image_name, folder):
+    img = os.path.join('images/' + folder + '/', image_name)
 
-    for index, row in rows_by_img.iterrows():
-        start_point = (int(row['xmin']), int(row['ymin']))
-        end_point = (int(row['xmax']), int(row['ymax']))
+    if folder == 'test':
+        data = test
+    else:
+        data = train
 
-        print(start_point)
-        print(end_point)
-        print(image_name)
+    if os.path.isfile(img):
+        rows_by_img = data.loc[data['filename'] == image_name]
+        image = cv2.imread(img)
 
-        cv2.rectangle(image, start_point, end_point, (0, 0, 255), 2)
+        for index, row in rows_by_img.iterrows():
+            start_point = (int(row['xmin']), int(row['ymin']))
+            end_point = (int(row['xmax']), int(row['ymax']))
+            cv2.rectangle(image, start_point, end_point, (0, 0, 255), 2)
 
-    cv2.imshow("Output", image)
-    cv2.waitKey(0)
+        cv2.imshow("Output", image)
+        cv2.waitKey(0)
+    else:
+        print("Image not exist")
 
 
-show_box('93.jpg', test)
+class NailDataset(object):
+    def __init__(self, img_name, folder, transforms):
+        self.img_name = img_name
+        self.folder = folder
+        self.transforms = transforms
+
+    def __getitem__(self, idx):
+        123
+
+
+
+show_box('637.jpg', 'test')
